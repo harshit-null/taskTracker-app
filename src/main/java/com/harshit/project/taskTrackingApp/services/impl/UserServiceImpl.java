@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -54,6 +55,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
             userRepository.delete(existingUser);
         }
+    }
+
+    @Override
+    public UUID getUserIdByUsername(String username) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getId(); //
+    }
+
+    @Override
+    public String getUsernameById(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getUserName();
     }
 
     @Override
